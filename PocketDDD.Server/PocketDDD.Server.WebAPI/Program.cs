@@ -24,8 +24,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<PocketDDDContext>(
-    options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext"));
+if (builder.Configuration.GetValue<bool>("InMemoryDatabase"))
+    builder.Services.AddDbContext<PocketDDDContext>(
+        options => options.UseInMemoryDatabase("InMemoryDatabase"));
+else
+    builder.Services.AddDbContext<PocketDDDContext>(
+        options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext"));
+
 
 builder.Services.AddScoped<RegistrationService>();
 builder.Services.AddScoped<UserService>();
